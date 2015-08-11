@@ -5,6 +5,7 @@ require_relative "./models/link"
 class BookmarkManager < Sinatra::Base
   get '/' do
     'Hello BookmarkManager!'
+    erb :home
   end
 
   get "/links" do
