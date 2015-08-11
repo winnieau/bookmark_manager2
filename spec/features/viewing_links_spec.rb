@@ -1,6 +1,5 @@
 require "spec_helper"
 
-
 feature "Viewing links" do
   scenario "I can go to the viewing links page" do
     visit "/"
