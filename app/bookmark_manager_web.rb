@@ -1,12 +1,20 @@
 require 'sinatra/base'
+require 'sinatra/session'
 require_relative "../data_mapper_setup"
 require_relative "./models/link"
 require_relative "./models/tag"
+require_relative "./models/user"
 
 class BookmarkManager < Sinatra::Base
+
+  set :views, proc { File.join(root, 'views') }
+
+  enable :sessions
+  set :session_secret, "super secret"
+
   get '/' do
     'Hello BookmarkManager!'
-    erb :home
+    erb :home, :layout => true
   end
 
   get "/links" do
@@ -28,7 +36,7 @@ class BookmarkManager < Sinatra::Base
     redirect to('/links')
   end
 
-  get "/blersgee" do
+  get "/tags" do
     redirect to("/tags/#{params[:name]}")
   end
 
@@ -36,6 +44,23 @@ class BookmarkManager < Sinatra::Base
     tag = Tag.first(name: params[:name])
     @links = tag ? tag.links : []
     erb :index
+  end
+
+  get "/users/new" do
+    erb :'users/new'
+  end
+
+  post "/users" do
+    user = User.create(email: params[:email], 
+        password: params[:password])
+    session[:user_id] = user.id
+    redirect to("/")
+  end
+
+  helpers do
+    def current_user
+      User.get(id: session[:user_id])
+    end
   end
 
   # start the server if ruby file executed directly
