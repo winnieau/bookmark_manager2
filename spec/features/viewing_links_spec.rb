@@ -30,7 +30,13 @@ feature "Viewing links" do
     click_link 'http://www.zombo.com/'
     expect(current_url).to eq 'http://www.zombo.com/'
   end
-
+  scenario "I can filter links by a specified tag" do
+    visit "/links"
+    our_tag = "ruby"
+    fill_in "name", with: our_tag
+    click_button "Search"
+    expect(current_path).to eq "/tags/#{our_tag}"
+  end
   scenario 'I can filter links by tag' do
     visit '/tags/bubbles'
     within 'ul#links' do
