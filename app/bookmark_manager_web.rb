@@ -11,6 +11,7 @@ class BookmarkManager < Sinatra::Base
   enable :sessions
   set :session_secret, "super secret"
   register Sinatra::Flash
+  use Rack::MethodOverride
 
   get '/' do
     erb :home
@@ -66,6 +67,25 @@ class BookmarkManager < Sinatra::Base
       flash.now[:notice] = "Password and confirmation password do not match"
     end
     erb :'/users/new'
+  end
+
+  get "/sessions/new" do
+    erb :"/sessions/new"
+  end
+
+  post "/sessions" do
+    user = User.authenticate(params[:email], params[:password])
+    if user
+      session[:user_id] = user.id
+      redirect "/"
+    end
+    flash.now[:notice] = "Email or password incorrect"
+    erb :"/sessions/new"
+  end
+
+  delete "/sessions" do 
+    session[:user_id] = false
+    redirect "/"
   end
 
   helpers do

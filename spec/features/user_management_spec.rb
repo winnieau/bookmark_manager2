@@ -28,15 +28,42 @@ feature "user sign up" do
       expect(page).to have_content "Email already registered"
     end
   end
-
-
-  def sign_up(user)
-    visit "/users/new"
-    expect(page.status_code).to eq 200
-    fill_in :email, with: user.email
-    fill_in :password, with: user.password
-    fill_in :password_confirmation, with: user.password_confirmation
-    click_button "Sign up"
-  end
-
 end
+
+feature "user signing in" do
+  let(:user) { create :user }
+  context "user signs in" do
+    scenario "if no problems" do
+      sign_in(password: user.password, email: user.email)
+      expect(current_path).to eq "/"
+      expect(page).to have_content "Welcome, #{user.email}"
+    end
+  end
+  context "user cannot sign in" do 
+    scenario "with wrong password" do
+      sign_in(email: user.email, password: !user.password)
+      expect(current_path).to eq "/sessions"
+      expect(page).to have_content "Email or password incorrect"
+    end
+  end
+end
+
+feature "user signing out" do
+  let(:user) { create :user }
+  scenario "can sign out" do
+    sign_in(email: user.email, password: user.password)
+    click_button "Sign out"
+    expect(current_path).to eq "/"
+    expect(page).not_to have_content "Welcome, #{user.email}"
+  end
+end
+
+
+
+
+
+
+
+
+
+
