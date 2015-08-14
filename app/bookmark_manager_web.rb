@@ -58,6 +58,8 @@ class BookmarkManager < Sinatra::Base
     if @user.save
       session[:user_id] = @user.id
       redirect to("/")
+    elsif User.first(:email => @user.email)
+      flash.now[:notice] = "Email already registered"
     elsif @user.email == ""
       flash.now[:notice] = "Please enter a valid email address"
     else
