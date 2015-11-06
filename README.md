@@ -1,3 +1,8 @@
+Objective
+---
+
+This is a Ronin project for creating a bookmark manager. 
+
 User Stories
 ----
 ```
