@@ -2,9 +2,7 @@ require 'sinatra/base'
 require 'sinatra/session'
 require 'sinatra/flash'
 require_relative "../data_mapper_setup"
-# require_relative "./models/link"
-# require_relative "./models/tag"
-# require_relative "./models/user"
+
 
 class BookmarkManager < Sinatra::Base
 
@@ -83,7 +81,7 @@ class BookmarkManager < Sinatra::Base
     erb :"/sessions/new"
   end
 
-  delete "/sessions" do 
+  delete "/sessions" do
     session[:user_id] = false
     redirect "/"
   end
